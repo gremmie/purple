@@ -24,19 +24,19 @@ class SteppingSwitch:
 
         """
         self.wiring = wiring
-        self.num_contacts = len(wiring)
+        self.num_positions = len(wiring)
         self.num_levels = len(wiring[0])
         self.pos = init_pos
 
         if not all(self.num_levels == len(level) for level in wiring):
             raise SteppingSwitchError("Ragged wiring table")
 
-        if not (0 <= self.pos < self.num_contacts):
+        if not (0 <= self.pos < self.num_positions):
             raise SteppingSwitchError("Illegal initial position")
 
     def step(self):
         """Advance the stepping switch position."""
-        self.pos = (self.pos + 1) % self.num_contacts
+        self.pos = (self.pos + 1) % self.num_positions
 
     def __getitem__(self, level):
         """This method is how to determine the output signal from the stepping
