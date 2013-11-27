@@ -21,35 +21,8 @@ script (which can be viewed by examing an early revision of the switches.py
 module.
 
 """
-from .switch import SteppingSwitch
 
-NUM_SWITCHES = 4
-
-# "Enum" to name the switches:
-SIXES, TWENTIES_1, TWENTIES_2, TWENTIES_3 = range(NUM_SWITCHES)
-
-# Raw wiring data for the switches is stored here:
-WIRING_DATA = [None] * NUM_SWITCHES
-
-
-def create_switch(switch_type, init_pos=0):
-    """Factory function for building a SteppingSwitch of the requested
-    type. The initial position of the switch can be specified.
-
-    """
-    if switch_type not in range(NUM_SWITCHES):
-        raise ValueError("illegal switch_type")
-
-    return SteppingSwitch(WIRING_DATA[switch_type], init_pos)
-
-
-# Actual wiring data follows.
-# Note: this data is currently 1-based to match the data found in the
-# Cryptologia paper. We convert to 0-based at module import time.
-# This may change as the program matures and confidence is gained in the wiring
-# data.
-
-WIRING_DATA[SIXES] = \
+SIXES_DATA = \
 [[2, 1, 3, 5, 4, 6],
  [6, 3, 5, 2, 1, 4],
  [1, 5, 4, 6, 2, 3],
@@ -76,7 +49,7 @@ WIRING_DATA[SIXES] = \
  [4, 6, 1, 2, 5, 3],
  [5, 2, 4, 3, 6, 1]]
 
-WIRING_DATA[TWENTIES_1] = \
+TWENTIES_1_DATA = \
 [[6, 19, 14, 1, 10, 4, 2, 7, 13, 9, 8, 16, 3, 18, 15, 11, 5, 12, 20, 17],
  [4, 5, 16, 17, 14, 1, 20, 15, 3, 8, 18, 11, 12, 13, 10, 19, 2, 6, 9, 7],
  [17, 1, 13, 6, 15, 11, 19, 12, 16, 18, 10, 3, 7, 14, 8, 20, 4, 9, 2, 5],
@@ -103,7 +76,7 @@ WIRING_DATA[TWENTIES_1] = \
  [5, 8, 1, 15, 19, 9, 12, 2, 6, 3, 14, 17, 4, 20, 16, 13, 18, 10, 7, 11],
  [14, 10, 4, 8, 9, 12, 3, 11, 17, 20, 19, 6, 15, 5, 2, 18, 16, 7, 1, 13]]
 
-WIRING_DATA[TWENTIES_2] = \
+TWENTIES_2_DATA = \
 [[15, 9, 1, 5, 17, 19, 3, 2, 10, 8, 11, 18, 12, 16, 6, 13, 20, 4, 14, 7],
  [12, 6, 15, 2, 4, 9, 8, 16, 19, 17, 5, 11, 20, 7, 10, 18, 1, 14, 13, 3],
  [4, 18, 5, 8, 16, 1, 12, 15, 20, 14, 13, 17, 11, 2, 7, 9, 6, 3, 10, 19],
@@ -130,7 +103,7 @@ WIRING_DATA[TWENTIES_2] = \
  [19, 13, 8, 16, 20, 10, 7, 1, 2, 18, 14, 6, 9, 5, 12, 3, 17, 15, 11, 4],
  [13, 1, 17, 15, 7, 4, 16, 3, 14, 5, 2, 10, 18, 8, 11, 9, 19, 12, 20, 6]]
 
-WIRING_DATA[TWENTIES_3] = \
+TWENTIES_3_DATA = \
 [[7, 19, 11, 3, 20, 1, 10, 6, 16, 12, 17, 13, 8, 9, 4, 18, 5, 14, 15, 2],
  [15, 17, 14, 2, 12, 13, 8, 3, 1, 19, 9, 4, 10, 7, 11, 20, 16, 6, 18, 5],
  [2, 11, 20, 12, 1, 19, 4, 10, 9, 14, 6, 15, 13, 3, 7, 16, 18, 8, 5, 17],
@@ -159,7 +132,9 @@ WIRING_DATA[TWENTIES_3] = \
 
 # Convert wiring data to be 0-based.
 
-for table in WIRING_DATA:
+_WIRING_DATA = [SIXES_DATA, TWENTIES_1_DATA, TWENTIES_2_DATA, TWENTIES_3_DATA]
+
+for table in _WIRING_DATA:
     for i in range(len(table)):
         for j in range(len(table[i])):
             table[i][j] = table[i][j] - 1

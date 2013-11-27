@@ -2,7 +2,14 @@
 # This file is part of purple, the PURPLE (Cipher Machine 97) simulation.
 # purple is released under the MIT License (see LICENSE.txt).
 
-"""This module contains the SteppingSwitch class."""
+"""This module contains the SteppingSwitch class and a factory function to
+create the standard switches used on the PURPLE machine.
+
+"""
+import purple.data as data
+
+# "Enum" to name the standard switches:
+SIXES, TWENTIES_1, TWENTIES_2, TWENTIES_3 = range(4)
 
 
 class SteppingSwitchError(Exception):
@@ -26,13 +33,20 @@ class SteppingSwitch:
         self.wiring = wiring
         self.num_positions = len(wiring)
         self.num_levels = len(wiring[0])
-        self.pos = init_pos
 
         if not all(self.num_levels == len(level) for level in wiring):
             raise SteppingSwitchError("Ragged wiring table")
 
-        if not (0 <= self.pos < self.num_positions):
-            raise SteppingSwitchError("Illegal initial position")
+        self.set_pos(init_pos)
+
+    def set_pos(self, pos):
+        """Set the switch position to pos.
+        Raises a SteppingSwitchError if pos is out of range.
+
+        """
+        if not (0 <= pos < self.num_positions):
+            raise SteppingSwitchError("Illegal switch position")
+        self.pos = pos
 
     def step(self):
         """Advance the stepping switch position."""
@@ -45,3 +59,29 @@ class SteppingSwitch:
 
         """
         return self.wiring[self.pos][level]
+
+
+def create_switch(switch_type, init_pos=0):
+    """Factory function for building a SteppingSwitch of the requested
+    standard type. The initial position of the switch can be specified.
+
+    The switch_type parameter must be one of the module level constants:
+        * SIXES
+        * TWENTIES_1
+        * TWENTIES_2
+        * TWENTIES_3
+
+    A ValueError will be raised if switch_type is an illegal value.
+
+    """
+    wiring_map = {
+        SIXES: data.SIXES_DATA,
+        TWENTIES_1: data.TWENTIES_1_DATA,
+        TWENTIES_2: data.TWENTIES_2_DATA,
+        TWENTIES_3: data.TWENTIES_3_DATA,
+    }
+    wiring = wiring_map.get(switch_type)
+    if not wiring:
+        raise ValueError("illegal switch type")
+
+    return SteppingSwitch(wiring, init_pos)
