@@ -116,4 +116,48 @@ class Purple97:
 
         self.alphabet = alphabet
 
+    @classmethod
+    def from_key_sheet(cls, switches, alphabet=None):
+        """This class method allows one to construct a Purple97 using
+        a shorthand notation used by US codebreakers.
+
+        switches: must be a string of the form 'a-b,c,d-ef' where
+            a - starting position of the sixes switch (1-25)
+            b - starting position of the twenties switch #1 (1-25)
+            c - starting position of the twenties switch #2 (1-25)
+            d - starting position of the twenties switch #3 (1-25)
+            e - which switch is the fast switch (1-3)
+            f - which switch is the middle switch (1-3)
+
+        Example: '9-1,24,6-23'
+
+        Note that the starting positions here are 1-based since that is the
+        notation the US codebreakers seemed to have used.
+
+        alphabet: the daily alphabet, same format as in the __init__ function
+
+        """
+        try:
+            sixes, twenties, speed = switches.split('-')
+        except ValueError:
+            raise Purple97Error('invalid switches string (-)')
+
+        twenties = twenties.split(',')
+        if len(twenties) != 3:
+            raise Purple97Error('invalid twenties position')
+
+        try:
+            switches_pos = [int(s) - 1 for s in [sixes] + twenties]
+        except ValueError:
+            raise Purple97Error('switch positions must be numeric')
+
+        if len(speed) != 2:
+            raise Purple97Error('invalid switch speed settings')
+
+        try:
+            fast_switch, middle_switch = int(speed[0]), int(speed[1])
+        except ValueError:
+            raise Purple97Error('switch speed settings must be numeric')
+
+        return cls(switches_pos, fast_switch, middle_switch, alphabet)
 

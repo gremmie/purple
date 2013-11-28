@@ -64,3 +64,30 @@ class Purple97TestCase(unittest.TestCase):
         self.assertRaises(Purple97Error, Purple97, alpha)
         alpha = 'M' * 26
         self.assertRaises(Purple97Error, Purple97, alpha)
+
+    def test_from_key_sheet(self):
+
+        Purple97.from_key_sheet('9-1,2,3-23')
+        Purple97.from_key_sheet('1-1,1,1-13')
+        Purple97.from_key_sheet('25-25,25,25-31')
+        Purple97.from_key_sheet('5-20,7,18-21', alphabet=string.ascii_uppercase)
+
+    def test_bad_from_key_sheet(self):
+
+        self.assertRaises(SteppingSwitchError, Purple97.from_key_sheet, '0-1,2,3-13')
+        self.assertRaises(SteppingSwitchError, Purple97.from_key_sheet, '26-1,2,3-13')
+        self.assertRaises(SteppingSwitchError, Purple97.from_key_sheet, '1-1,0,3-13')
+        self.assertRaises(SteppingSwitchError, Purple97.from_key_sheet, '1-1,2,26-13')
+        self.assertRaises(SteppingSwitchError, Purple97.from_key_sheet, '1-1,2,26-03')
+        self.assertRaises(SteppingSwitchError, Purple97.from_key_sheet, '1-1,2,26-00')
+        self.assertRaises(SteppingSwitchError, Purple97.from_key_sheet, '1-1,2,26-14')
+
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, 'bad string')
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-2-1,2,26-14')
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, 'a-9,2,20-13')
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-a,2,20-13')
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,a,20-13')
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,a-13')
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,20-a3')
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,20-1a')
+        self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,20-123')
