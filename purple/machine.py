@@ -5,6 +5,11 @@
 """This module contains the Purple97 class, the top level class in the PURPLE
 simulation.
 
+The reference for this simulation is the paper "PURPLE Revealed: Simulation and
+Computer-aided Cryptanalysis of Angooki Taipu B", by Wes Freeman, Geoff
+Sullivan, and Frode Weierud. This paper was published in Cryptologia, Volume 27,
+Issue 1, January, 2003, pp. 1-43.
+
 """
 from collections import Counter
 import string
@@ -21,6 +26,9 @@ class Purple97:
     machine.
 
     """
+    VALID_KEYS = set(string.ascii_uppercase)
+    STRAIGHT_PLUGBOARD = 'AEIOUYBCDFGHJKLMNPQRSTVWXZ'
+
     def __init__(self, switches_pos=None, fast_switch=1, middle_switch=2,
             alphabet=None):
         """Build a PURPLE (Cipher Machine 97) instance. Initial settings can be
@@ -48,7 +56,7 @@ class Purple97:
         to the plugboard. The first six characters are the mapping for the sixes
         switch, and the remaining 20 are for the input wiring for the first
         stage of the twenties switches. If None is supplied, a straight through
-        mapping is assumed; i.e. "AEIOUYBCDFGHJKLMNPQRSTVWXZ".
+        mapping is assumed; i.e. STRAIGHT_PLUGBOARD.
 
         The alphabet parameter will accept either upper or lowercase letters.
         All 26 distinct letters must be present or else a Purple97Error
@@ -95,11 +103,11 @@ class Purple97:
 
         # Validate the alphabet
         if alphabet is None:
-            alphabet = 'AEIOUYBCDFGHJKLMNPQRSTVWXZ'
+            alphabet = self.STRAIGHT_PLUGBOARD
 
-        alphabet = alphabet.upper()
         if len(alphabet) != 26:
             raise Purple97Error("invalid alphabet length")
+        alphabet = alphabet.upper()
 
         # Count valid letters
         ctr = Counter(string.ascii_uppercase)
@@ -115,6 +123,9 @@ class Purple97:
             raise Purple97Error("invalid alphabet")
 
         self.alphabet = alphabet
+        self.plugboard = {c : n for n, c in enumerate(alphabet)}
+
+        self.middle_switch_catchup = False
 
     @classmethod
     def from_key_sheet(cls, switches, alphabet=None):
@@ -161,3 +172,73 @@ class Purple97:
 
         return cls(switches_pos, fast_switch, middle_switch, alphabet)
 
+    def decrypt(self, ciphertext):
+        """Decrypts the given ciphertext message and returns the plaintext
+        output.
+
+        ciphertext must contain only the letters A-Z or else a Purple97Error
+        exception is raised.
+
+        """
+        plaintext = []
+        for c in ciphertext:
+            if c not in self.VALID_KEYS:
+                raise Purple97Error("invalid input '{}' to decrypt".format(c))
+
+            n = self.plugboard[c]
+            if n < 6:
+                # This input goes to the sixes switch
+                x = self.sixes[n]
+            else:
+                # This input goes to the chain of twenties switches
+                n -= 6
+                x = self.twenties[0][self.twenties[1][self.twenties[2][n]]]
+                x += 6
+
+            plaintext.append(self.alphabet[x])
+
+            # Now step the switches.
+            # The sixes switch steps every letter.
+            sixes_pos = self.sixes.step()
+            middle_pos = self.middle_switch.pos
+
+            # Only 1 twenties switch steps at a time.
+            #
+            # Normally the fast switch advances every letter.
+            #
+            # However if the sixes is at the last position (24), the middle
+            # switch steps instead.
+            #
+            # But if the sixes is at the last position (24) and the middle
+            # switch is at the last position (24), the slow switch will step.
+            # The middle switch will step on the next letter in this case.
+            #
+            # Here we reproduce figure 10 from the reference paper with offsets
+            # adjusted for 0-based indexing to illustrate the movement. In this
+            # example the fast is twenties #1, middle is #2, and slow is #3.
+            #
+            # Sixes     Twenties #1     Twenties #2     Twenties #3
+            # -----------------------------------------------------
+            #   20          0               24              4
+            #   21          1               24              4
+            #   22          2               24              4
+            #   23          3               24              4
+            # * 24          3               24              5
+            # #  0          3                0              5
+            #    1          4                0              5
+            #
+            # Here we see the fast switch stepping. However at (*) both the
+            # sixes and middle switch have reached their last positions, so the
+            # slow switch steps. At the next letter (#) the middle switch plays
+            # "catch up" and advances.
+
+            if sixes_pos == 24 and middle_pos == 24:
+                self.slow_switch.step()
+                self.middle_switch_catchup = True
+            elif sixes_pos == 24 or self.middle_switch_catchup:
+                self.middle_switch.step()
+                self.middle_switch_catchup = False
+            else:
+                self.fast_switch.step()
+
+        return ''.join(plaintext)
