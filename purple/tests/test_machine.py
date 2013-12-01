@@ -51,19 +51,19 @@ class Purple97TestCase(unittest.TestCase):
     def test_construct_bad_alphabet(self):
 
         alpha = ''
-        self.assertRaises(Purple97Error, Purple97, alpha)
+        self.assertRaises(Purple97Error, Purple97, alphabet=alpha)
         alpha = '1'
-        self.assertRaises(Purple97Error, Purple97, alpha)
+        self.assertRaises(Purple97Error, Purple97, alphabet=alpha)
         alpha = '!' * 26
-        self.assertRaises(Purple97Error, Purple97, alpha)
+        self.assertRaises(Purple97Error, Purple97, alphabet=alpha)
         alpha = string.ascii_uppercase[3:]
-        self.assertRaises(Purple97Error, Purple97, alpha)
+        self.assertRaises(Purple97Error, Purple97, alphabet=alpha)
         alpha = string.ascii_uppercase + string.ascii_uppercase[4:10]
-        self.assertRaises(Purple97Error, Purple97, alpha)
+        self.assertRaises(Purple97Error, Purple97, alphabet=alpha)
         alpha = string.ascii_uppercase[:13] + string.ascii_uppercase[:13]
-        self.assertRaises(Purple97Error, Purple97, alpha)
+        self.assertRaises(Purple97Error, Purple97, alphabet=alpha)
         alpha = 'M' * 26
-        self.assertRaises(Purple97Error, Purple97, alpha)
+        self.assertRaises(Purple97Error, Purple97, alphabet=alpha)
 
     def test_from_key_sheet(self):
 
