@@ -91,3 +91,55 @@ class Purple97TestCase(unittest.TestCase):
         self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,20-a3')
         self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,20-1a')
         self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,20-123')
+
+    def test_first_part_of_14_part_message(self):
+
+        # The ciphertext contains garbles, indicated by '-' chars.
+        ciphertext = (
+            "ZTXODNWKCCMAVNZXYWEETUQTCIMN"
+            "VEUVIWBLUAXRRTLVARGNTPCNOIUP"
+            "JLCIVRTPJKAUHVMUDTHKTXYZELQTVWGBUHFAWSHU"
+            "LBFBHEXMYHFLOWD-KWHKKNXEBVPYHHGHEKXIOHQ"
+            "HUHWIKYJYHPPFEALNNAKIBOOZNFRLQCFLJTTSSDDOIOCVT-"
+            "ZCKQTSHXTIJCNWXOKUFNQR-TAOIHWTATWV"
+        )
+
+        ciphertext = """\
+ZTXOD NWKCC MAVNZ XYWEE TUQTC IMNVE UVIWB LUAXR RTLVA
+RGNTP CNOIU PJLCI VRTPJ KAUHV MUDTH KTXYZ ELQTV WGBUH FAWSH
+ULBFB HEXMY HFLOW D-KWH KKNXE BVPYH HGHEK XIOHQ HUHWI KYJYH
+PPFEA LNNAK IBOOZ NFRLQ CFLJT TSSDD OIOCV T-ZCK QTSHX TIJCN
+WXOKU FNQR- TAOIH WTATW V"""
+        ciphertext = ''.join(ciphertext.split())
+        self.assertEqual(216, len(ciphertext))
+
+        # Use 'X' in place of the garbles
+        input_text = ciphertext.replace('-', 'A')
+
+        plaintext = (
+            "FOVTATAKIDASINIMUIMINOMOXIWO"
+            "IRUBESIFYXXFCKZZRDXOOVBTNFYX"
+            "FAEMEMORANDUMFIOFOVOOMOJIBAKARIFYXRAICCY"
+            "LFCBBCFCTHEGOVE-NMENTOFJAPANLFLPROMPTED"
+            "BYAGENUINEDESIRETOCOMETOANAMICABLEUNDERSTANDIN-"
+            "WITHTHEGOVERNMENTOFTHE-NITEDSTATES"
+        )
+
+        # Decrypt
+        purple = Purple97.from_key_sheet(
+                switches='9-1,24,6-23',
+                alphabet='NOKTYUXEQLHBRMPDICJASVWGZF')
+
+        actual = purple.decrypt(input_text)
+        print(actual)
+
+        mismatches = []
+        for n, (a, b) in enumerate(zip(plaintext, actual)):
+            if a != b and a != '-':
+                mismatches.append(n)
+
+        print("There are {} mismatches".format(len(mismatches)))
+        if mismatches:
+            print("mismatches = {}".format(mismatches))
+
+        self.assertTrue(len(mismatches) == 0)
