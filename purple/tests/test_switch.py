@@ -47,7 +47,8 @@ class SwitchTestCase(unittest.TestCase):
         for n in range(25 * 2 + 1):
             pos = n % 25
             self.assertEqual(switch.pos, pos)
-            switch.step()
+            new_pos = switch.step()
+            self.assertEqual((pos + 1) % 25, new_pos)
 
     def test_output(self):
 

@@ -49,8 +49,13 @@ class SteppingSwitch:
         self.pos = pos
 
     def step(self):
-        """Advance the stepping switch position."""
+        """Advance the stepping switch position.
+
+        The new 0-based position of the switch is returned.
+
+        """
         self.pos = (self.pos + 1) % self.num_positions
+        return self.pos
 
     def __getitem__(self, level):
         """This method is how to determine the output signal from the stepping
