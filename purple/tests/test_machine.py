@@ -104,17 +104,10 @@ class Purple97TestCase(unittest.TestCase):
             "ZCKQTSHXTIJCNWXOKUFNQR-TAOIHWTATWV"
         )
 
-        ciphertext = """\
-ZTXOD NWKCC MAVNZ XYWEE TUQTC IMNVE UVIWB LUAXR RTLVA
-RGNTP CNOIU PJLCI VRTPJ KAUHV MUDTH KTXYZ ELQTV WGBUH FAWSH
-ULBFB HEXMY HFLOW D-KWH KKNXE BVPYH HGHEK XIOHQ HUHWI KYJYH
-PPFEA LNNAK IBOOZ NFRLQ CFLJT TSSDD OIOCV T-ZCK QTSHX TIJCN
-WXOKU FNQR- TAOIH WTATW V"""
-        ciphertext = ''.join(ciphertext.split())
         self.assertEqual(216, len(ciphertext))
 
         # Use 'X' in place of the garbles
-        input_text = ciphertext.replace('-', 'A')
+        input_text = ciphertext.replace('-', 'X')
 
         plaintext = (
             "FOVTATAKIDASINIMUIMINOMOXIWO"
@@ -124,6 +117,7 @@ WXOKU FNQR- TAOIH WTATW V"""
             "BYAGENUINEDESIRETOCOMETOANAMICABLEUNDERSTANDIN-"
             "WITHTHEGOVERNMENTOFTHE-NITEDSTATES"
         )
+        self.assertEqual(len(ciphertext), len(plaintext))
 
         # Decrypt
         purple = Purple97.from_key_sheet(
@@ -131,15 +125,15 @@ WXOKU FNQR- TAOIH WTATW V"""
                 alphabet='NOKTYUXEQLHBRMPDICJASVWGZF')
 
         actual = purple.decrypt(input_text)
-        print(actual)
 
         mismatches = []
         for n, (a, b) in enumerate(zip(plaintext, actual)):
             if a != b and a != '-':
                 mismatches.append(n)
 
-        print("There are {} mismatches".format(len(mismatches)))
+        msg = None
         if mismatches:
-            print("mismatches = {}".format(mismatches))
+            msg = "There are {} mismatches: {}".format(len(mismatches),
+                    mismatches)
 
-        self.assertTrue(len(mismatches) == 0)
+        self.assertTrue(len(mismatches) == 0, msg)

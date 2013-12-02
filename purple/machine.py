@@ -10,6 +10,9 @@ Computer-aided Cryptanalysis of Angooki Taipu B", by Wes Freeman, Geoff
 Sullivan, and Frode Weierud. This paper was published in Cryptologia, Volume 27,
 Issue 1, January, 2003, pp. 1-43.
 
+The paper is also available at:
+http://cryptocellar.web.cern.ch/cryptocellar/pubs/PurpleRevealed.pdf
+
 """
 from collections import Counter
 import string
@@ -197,10 +200,15 @@ class Purple97:
 
             plaintext.append(self.alphabet[x])
 
-            # Now step the switches.
-            # The sixes switch steps every letter.
-            sixes_pos = self.sixes.step()
+            # Now step the switches. First read the sixes and middle switch
+            # positions before stepping anything. Use these latched values in
+            # the decision processes for stepping a twenties. This is crucial!
+            sixes_pos = self.sixes.pos
             middle_pos = self.middle_switch.pos
+
+            # Now we can step the sixes. It unconditionally steps after every
+            # letter is processed.
+            self.sixes.step()
 
             # Only 1 twenties switch steps at a time.
             #
@@ -230,7 +238,7 @@ class Purple97:
             # Here we see the fast switch stepping. However at (*) both the
             # sixes and middle switch have reached their last positions, so the
             # slow switch steps. At the next letter (#) the middle switch plays
-            # "catch up" and advances.
+            # "catch up" and advances while the fast switch holds steady.
 
             if sixes_pos == 24 and middle_pos == 24:
                 self.slow_switch.step()
