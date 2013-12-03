@@ -50,32 +50,59 @@ class SwitchTestCase(unittest.TestCase):
             new_pos = switch.step()
             self.assertEqual((pos + 1) % 25, new_pos)
 
-    def test_output(self):
+    def test_decrypt(self):
 
         switch = create_switch(purple.switch.SIXES)
         switch.set_pos(0)
-        self.assertEqual(switch[0], 1)
-        self.assertEqual(switch[1], 0)
-        self.assertEqual(switch[2], 2)
-        self.assertEqual(switch[3], 4)
-        self.assertEqual(switch[4], 3)
-        self.assertEqual(switch[5], 5)
+        self.assertEqual(switch.decrypt(0), 1)
+        self.assertEqual(switch.decrypt(1), 0)
+        self.assertEqual(switch.decrypt(2), 2)
+        self.assertEqual(switch.decrypt(3), 4)
+        self.assertEqual(switch.decrypt(4), 3)
+        self.assertEqual(switch.decrypt(5), 5)
 
         switch.step()
-        self.assertEqual(switch[0], 5)
-        self.assertEqual(switch[1], 2)
-        self.assertEqual(switch[2], 4)
-        self.assertEqual(switch[3], 1)
-        self.assertEqual(switch[4], 0)
-        self.assertEqual(switch[5], 3)
+        self.assertEqual(switch.decrypt(0), 5)
+        self.assertEqual(switch.decrypt(1), 2)
+        self.assertEqual(switch.decrypt(2), 4)
+        self.assertEqual(switch.decrypt(3), 1)
+        self.assertEqual(switch.decrypt(4), 0)
+        self.assertEqual(switch.decrypt(5), 3)
 
         switch.set_pos(24)
-        self.assertEqual(switch[0], 4)
-        self.assertEqual(switch[1], 1)
-        self.assertEqual(switch[2], 3)
-        self.assertEqual(switch[3], 2)
-        self.assertEqual(switch[4], 5)
-        self.assertEqual(switch[5], 0)
+        self.assertEqual(switch.decrypt(0), 4)
+        self.assertEqual(switch.decrypt(1), 1)
+        self.assertEqual(switch.decrypt(2), 3)
+        self.assertEqual(switch.decrypt(3), 2)
+        self.assertEqual(switch.decrypt(4), 5)
+        self.assertEqual(switch.decrypt(5), 0)
+
+    def test_encrypt(self):
+
+        switch = create_switch(purple.switch.SIXES)
+        switch.set_pos(0)
+        self.assertEqual(switch.encrypt(0), 1)
+        self.assertEqual(switch.encrypt(1), 0)
+        self.assertEqual(switch.encrypt(2), 2)
+        self.assertEqual(switch.encrypt(3), 4)
+        self.assertEqual(switch.encrypt(4), 3)
+        self.assertEqual(switch.encrypt(5), 5)
+
+        switch.step()
+        self.assertEqual(switch.encrypt(0), 4)
+        self.assertEqual(switch.encrypt(1), 3)
+        self.assertEqual(switch.encrypt(2), 1)
+        self.assertEqual(switch.encrypt(3), 5)
+        self.assertEqual(switch.encrypt(4), 2)
+        self.assertEqual(switch.encrypt(5), 0)
+
+        switch.set_pos(24)
+        self.assertEqual(switch.encrypt(0), 5)
+        self.assertEqual(switch.encrypt(1), 1)
+        self.assertEqual(switch.encrypt(2), 3)
+        self.assertEqual(switch.encrypt(3), 2)
+        self.assertEqual(switch.encrypt(4), 0)
+        self.assertEqual(switch.encrypt(5), 4)
 
     def test_bad_create_switch(self):
 
