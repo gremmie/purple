@@ -206,6 +206,38 @@ class Purple97:
 
         return ''.join(plaintext)
 
+    def encrypt(self, plaintext):
+        """Encrypts the given plaintext message and returns the ciphertext
+        output.
+
+        plaintext must contain only the letters A-Z or else a Purple97Error
+        exception is raised.
+
+        """
+        ciphertext = []
+        for c in plaintext:
+            if c not in self.VALID_KEYS:
+                raise Purple97Error("invalid input '{}' to encrypt".format(c))
+
+            n = self.plugboard[c]
+            if n < 6:
+                # This input goes to the sixes switch
+                x = self.sixes.encrypt(n)
+            else:
+                # This input goes to the chain of twenties switches in reverse
+                # order compared to decrypt.
+                n -= 6
+                x = self.twenties[2].encrypt(self.twenties[1].encrypt(
+                        self.twenties[0].encrypt(n)))
+                x += 6
+
+            ciphertext.append(self.alphabet[x])
+
+            # Now step the switches.
+            self.step()
+
+        return ''.join(ciphertext)
+
     def step(self):
         """Step the stepping switches."""
         # First read the sixes and middle switch

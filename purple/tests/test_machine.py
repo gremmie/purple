@@ -9,6 +9,25 @@ from purple.machine import Purple97, Purple97Error
 from purple.switch import SteppingSwitchError
 
 
+# The ciphertext contains garbles, indicated by '-' chars.
+ciphertext = (
+    "ZTXODNWKCCMAVNZXYWEETUQTCIMN"
+    "VEUVIWBLUAXRRTLVARGNTPCNOIUP"
+    "JLCIVRTPJKAUHVMUDTHKTXYZELQTVWGBUHFAWSHU"
+    "LBFBHEXMYHFLOWD-KWHKKNXEBVPYHHGHEKXIOHQ"
+    "HUHWIKYJYHPPFEALNNAKIBOOZNFRLQCFLJTTSSDDOIOCVT-"
+    "ZCKQTSHXTIJCNWXOKUFNQR-TAOIHWTATWV"
+)
+
+plaintext = (
+    "FOVTATAKIDASINIMUIMINOMOXIWO"
+    "IRUBESIFYXXFCKZZRDXOOVBTNFYX"
+    "FAEMEMORANDUMFIOFOVOOMOJIBAKARIFYXRAICCY"
+    "LFCBBCFCTHEGOVE-NMENTOFJAPANLFLPROMPTED"
+    "BYAGENUINEDESIRETOCOMETOANAMICABLEUNDERSTANDIN-"
+    "WITHTHEGOVERNMENTOFTHE-NITEDSTATES"
+)
+
 class Purple97TestCase(unittest.TestCase):
 
     def test_construction(self):
@@ -92,31 +111,11 @@ class Purple97TestCase(unittest.TestCase):
         self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,20-1a')
         self.assertRaises(Purple97Error, Purple97.from_key_sheet, '1-9,2,20-123')
 
-    def test_first_part_of_14_part_message(self):
-
-        # The ciphertext contains garbles, indicated by '-' chars.
-        ciphertext = (
-            "ZTXODNWKCCMAVNZXYWEETUQTCIMN"
-            "VEUVIWBLUAXRRTLVARGNTPCNOIUP"
-            "JLCIVRTPJKAUHVMUDTHKTXYZELQTVWGBUHFAWSHU"
-            "LBFBHEXMYHFLOWD-KWHKKNXEBVPYHHGHEKXIOHQ"
-            "HUHWIKYJYHPPFEALNNAKIBOOZNFRLQCFLJTTSSDDOIOCVT-"
-            "ZCKQTSHXTIJCNWXOKUFNQR-TAOIHWTATWV"
-        )
-
-        self.assertEqual(216, len(ciphertext))
+    def test_decrypt_first_part_of_14_part_message(self):
 
         # Use 'X' in place of the garbles
         input_text = ciphertext.replace('-', 'X')
 
-        plaintext = (
-            "FOVTATAKIDASINIMUIMINOMOXIWO"
-            "IRUBESIFYXXFCKZZRDXOOVBTNFYX"
-            "FAEMEMORANDUMFIOFOVOOMOJIBAKARIFYXRAICCY"
-            "LFCBBCFCTHEGOVE-NMENTOFJAPANLFLPROMPTED"
-            "BYAGENUINEDESIRETOCOMETOANAMICABLEUNDERSTANDIN-"
-            "WITHTHEGOVERNMENTOFTHE-NITEDSTATES"
-        )
         self.assertEqual(len(ciphertext), len(plaintext))
 
         # Decrypt
@@ -128,6 +127,32 @@ class Purple97TestCase(unittest.TestCase):
 
         mismatches = []
         for n, (a, b) in enumerate(zip(plaintext, actual)):
+            if a != b and a != '-':
+                mismatches.append(n)
+
+        msg = None
+        if mismatches:
+            msg = "There are {} mismatches: {}".format(len(mismatches),
+                    mismatches)
+
+        self.assertTrue(len(mismatches) == 0, msg)
+
+    def test_encrypt_first_part_of_14_part_message(self):
+
+        # Use 'X' in place of the garbles
+        input_text = plaintext.replace('-', 'X')
+
+        self.assertEqual(len(ciphertext), len(plaintext))
+
+        # Encrypt
+        purple = Purple97.from_key_sheet(
+                switches='9-1,24,6-23',
+                alphabet='NOKTYUXEQLHBRMPDICJASVWGZF')
+
+        actual = purple.encrypt(input_text)
+
+        mismatches = []
+        for n, (a, b) in enumerate(zip(ciphertext, actual)):
             if a != b and a != '-':
                 mismatches.append(n)
 
