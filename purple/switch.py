@@ -27,16 +27,19 @@ class SteppingSwitch:
         integers representing the output contacts. The initial position of the
         switch can also be set; this defaults to 0.
 
-        The wiring lists are assumed to be 0-based.
+        The wiring lists are assumed to be 0-based and represent the decrypt
+        path through the switch. A reciprocal encrypt wiring map will be
+        constructed from this argument internally.
 
         """
-        self.wiring = wiring
+        self.dec_wiring = wiring
         self.num_positions = len(wiring)
         self.num_levels = len(wiring[0])
 
         if not all(self.num_levels == len(level) for level in wiring):
             raise SteppingSwitchError("Ragged wiring table")
 
+        self._build_encrypt_wiring()
         self.set_pos(init_pos)
 
     def set_pos(self, pos):
@@ -57,13 +60,33 @@ class SteppingSwitch:
         self.pos = (self.pos + 1) % self.num_positions
         return self.pos
 
-    def __getitem__(self, level):
+    def decrypt(self, level):
         """This method is how to determine the output signal from the stepping
-        switch. The key parameter 'level' is the integer input level for the
-        incoming signal. The integer outgoing contact level is returned.
+        switch for the decrypt path. The parameter 'level' is the integer input
+        level for the incoming signal. The integer outgoing contact level is
+        returned.
 
         """
-        return self.wiring[self.pos][level]
+        return self.dec_wiring[self.pos][level]
+
+    def encrypt(self, level):
+        """This method is how to determine the output signal from the stepping
+        switch for the encrypt path. The parameter 'level' is the integer input
+        level for the incoming signal. The integer outgoing contact level is
+        returned.
+
+        """
+        return self.enc_wiring[self.pos][level]
+
+    def _build_encrypt_wiring(self):
+        """This method builds an encrypt wiring table from the decrypt wiring
+        table member.
+
+        """
+        self.enc_wiring = []
+        for level in self.dec_wiring:
+            self.enc_wiring.append(
+                [level.index(n) for n in range(self.num_levels)])
 
 
 def create_switch(switch_type, init_pos=0):
