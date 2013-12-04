@@ -21,25 +21,35 @@ class SteppingSwitch:
     in the PURPLE cipher machine.
 
     """
-    def __init__(self, wiring, init_pos=0):
-        """Construct a SteppingSwitch from a wiring list, which must be a list
-        of lists (one list per input level). Each inner list is a list of
-        integers representing the output contacts. The initial position of the
-        switch can also be set; this defaults to 0.
+    def __init__(self, dec_wiring, enc_wiring=None, init_pos=0):
+        """Construct a SteppingSwitch.
 
-        The wiring lists are assumed to be 0-based and represent the decrypt
-        path through the switch. A reciprocal encrypt wiring map will be
-        constructed from this argument internally.
+        dec_wiring is the decrypt wiring table, which must be a list
+        of lists (one list per input level). Each inner list is a list of
+        integers representing the output contacts.
+
+        enc_wiring is the encrypt wiring table. If None, a reciprocal table is
+        built from the dec_wiring parameter.
+
+        init_pos is the initial position of the switch; this defaults to 0.
 
         """
-        self.dec_wiring = wiring
-        self.num_positions = len(wiring)
-        self.num_levels = len(wiring[0])
+        self.dec_wiring = dec_wiring
+        self.num_positions = len(dec_wiring)
+        self.num_levels = len(dec_wiring[0])
 
-        if not all(self.num_levels == len(level) for level in wiring):
-            raise SteppingSwitchError("Ragged wiring table")
+        if not all(self.num_levels == len(level) for level in self.dec_wiring):
+            raise SteppingSwitchError("Invalid decrypt wiring dimensions")
 
-        self._build_encrypt_wiring()
+        self.enc_wiring = (enc_wiring if enc_wiring else
+                data.build_encrypt_wiring(dec_wiring))
+
+        if self.num_positions != len(self.enc_wiring):
+            raise SteppingSwitchError("Encrypt/Decrypt positions mismatch")
+
+        if not all(self.num_levels == len(level) for level in self.enc_wiring):
+            raise SteppingSwitchError("Invalid encrypt wiring dimensions")
+
         self.set_pos(init_pos)
 
     def set_pos(self, pos):
@@ -78,16 +88,6 @@ class SteppingSwitch:
         """
         return self.enc_wiring[self.pos][level]
 
-    def _build_encrypt_wiring(self):
-        """This method builds an encrypt wiring table from the decrypt wiring
-        table member.
-
-        """
-        self.enc_wiring = []
-        for level in self.dec_wiring:
-            self.enc_wiring.append(
-                [level.index(n) for n in range(self.num_levels)])
-
 
 def create_switch(switch_type, init_pos=0):
     """Factory function for building a SteppingSwitch of the requested
@@ -102,14 +102,9 @@ def create_switch(switch_type, init_pos=0):
     A ValueError will be raised if switch_type is an illegal value.
 
     """
-    wiring_map = {
-        SIXES: data.SIXES_DATA,
-        TWENTIES_1: data.TWENTIES_1_DATA,
-        TWENTIES_2: data.TWENTIES_2_DATA,
-        TWENTIES_3: data.TWENTIES_3_DATA,
-    }
-    wiring = wiring_map.get(switch_type)
-    if not wiring:
+    if switch_type not in [SIXES, TWENTIES_1, TWENTIES_2, TWENTIES_3]:
         raise ValueError("illegal switch type")
 
-    return SteppingSwitch(wiring, init_pos)
+    return SteppingSwitch(dec_wiring=data.DECRYPT_DATA[switch_type],
+            enc_wiring=data.ENCRYPT_DATA[switch_type],
+            init_pos=init_pos)

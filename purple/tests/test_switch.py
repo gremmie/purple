@@ -23,10 +23,48 @@ class SwitchTestCase(unittest.TestCase):
             [0, 1, 2]
         ]
         self.assertRaises(SteppingSwitchError, SteppingSwitch, bad_wiring)
-        self.assertRaises(SteppingSwitchError, SteppingSwitch, bad_wiring, 0)
-        self.assertRaises(SteppingSwitchError, SteppingSwitch, good_wiring, -1)
-        self.assertRaises(SteppingSwitchError, SteppingSwitch, good_wiring, 3)
-        self.assertRaises(SteppingSwitchError, SteppingSwitch, bad_wiring, 3)
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, bad_wiring,
+                init_pos=0)
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, good_wiring,
+                init_pos=-1)
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, good_wiring,
+                init_pos=3)
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, bad_wiring,
+                init_pos=3)
+
+    def test_wiring_table_mismatch_in_dimensions(self):
+
+        wiring_1 = [
+            [1, 2, 0],
+            [2, 1, 0],
+            [0, 1, 2],
+        ]
+        wiring_2 = [
+            [1, 2, 3, 0],
+            [1, 2, 3, 0],
+            [1, 2, 3, 0],
+        ]
+        wiring_3 = [
+            [1, 2, 3, 0],
+            [1, 2, 3, 0],
+            [1, 2, 3, 0],
+            [1, 2, 3, 0],
+        ]
+        bad_wiring = [
+            [1, 2, 0],
+            [2, 1],
+            [0, 1, 2]
+        ]
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, wiring_1,
+                wiring_2)
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, wiring_2,
+                wiring_1)
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, wiring_1,
+                bad_wiring)
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, wiring_2,
+                wiring_3)
+        self.assertRaises(SteppingSwitchError, SteppingSwitch, wiring_3,
+                wiring_2)
 
     def test_bad_set_pos(self):
 
