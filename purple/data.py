@@ -132,9 +132,24 @@ TWENTIES_3_DATA = \
 
 # Convert wiring data to be 0-based.
 
-_WIRING_DATA = [SIXES_DATA, TWENTIES_1_DATA, TWENTIES_2_DATA, TWENTIES_3_DATA]
+DECRYPT_DATA = [SIXES_DATA, TWENTIES_1_DATA, TWENTIES_2_DATA, TWENTIES_3_DATA]
 
-for table in _WIRING_DATA:
+for table in DECRYPT_DATA:
     for i in range(len(table)):
         for j in range(len(table[i])):
             table[i][j] = table[i][j] - 1
+
+
+def build_encrypt_wiring(dec_wiring):
+    """This function builds a reciprocal encrypt wiring table from the supplied
+    decrypt wiring table.
+
+    """
+    enc_wiring = []
+    for level in dec_wiring:
+        enc_wiring.append(
+            [level.index(n) for n in range(len(level))])
+    return enc_wiring
+
+# Build reciprocal encrypt wiring tables:
+ENCRYPT_DATA = [build_encrypt_wiring(wiring) for wiring in DECRYPT_DATA]
