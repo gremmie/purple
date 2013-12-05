@@ -7,6 +7,7 @@
 import argparse
 import os
 import string
+import sys
 
 from purple.machine import Purple97, Purple97Error
 from purple.switch import SteppingSwitchError
@@ -40,7 +41,7 @@ DIGITS = {
 }
 
 
-def filter_plaintext(s):
+def filter_plaintext(source):
     """A generator to filter plaintext to ensure only valid input is fed to
     the purple cipher machine:
 
@@ -49,17 +50,31 @@ def filter_plaintext(s):
         * Digits are converted to words; e.g. 1 => ONE
         * All other input is ignored (filtered out)
 
+    source can be anything that yields a line of text at a time.
+
     """
-    for c in s:
-        if c in Purple97.VALID_KEYS:
-            yield c
-        elif c in LOWERCASE:
-            yield c.upper()
-        else:
-            digit_name = DIGITS.get(c)
-            if digit_name:
-                for d in digit_name:
-                    yield d
+    for line in source:
+        for c in line:
+            if c in Purple97.VALID_KEYS:
+                yield c
+            elif c in LOWERCASE:
+                yield c.upper()
+            else:
+                digit_name = DIGITS.get(c)
+                if digit_name:
+                    for d in digit_name:
+                        yield d
+
+
+def filter_whitespace(source):
+    """A generator to filter out whitespace from text read from
+    a file-like source.
+
+    """
+    for line in source:
+        for c in line:
+            if not c.isspace():
+                yield c
 
 
 def main(argv=None):
@@ -70,23 +85,28 @@ def main(argv=None):
         help='encrypt text from files or the command-line')
     parser.add_argument('-d', '--decrypt', action='store_true',
         help='decrypt text from files or the command-line')
+    parser.add_argument('-f', '--filter', action='store_true',
+        help='filter plaintext and provide useful substitutions')
     parser.add_argument('-s', '--switches',
         help='switch settings, e.g. 9-1,24,6-23')
     parser.add_argument('-a', '--alphabet',
         help='plugboard wiring string, 26-letters')
     parser.add_argument('-t', '--text',
         help='input text to encrypt/decrypt')
-    parser.add_argument('-f', '--files', nargs='+', metavar='FILE',
-        help='files to take input from, - for stdin')
+    parser.add_argument('-i', '--input', metavar='FILE',
+        help='file to read input text from, - for stdin')
 
     args = parser.parse_args(args=argv)
 
     if not args.encrypt and not args.decrypt:
-        parser.error("Please supply either -e or -d options")
+        parser.print_help()
+        parser.exit(1)
     if args.encrypt and args.decrypt:
         parser.error("Please supply either -e or -d, not both")
-    if args.text and args.files:
-        parser.error("Please supply either -t or -f, not both")
+    if args.text and args.file:
+        parser.error("Please supply either -t or -i, not both")
+    if args.decrypt and args.filter:
+        parser.error("The -f option only works with -e (encrypt)")
 
     # Get key settings
     if args.switches:
@@ -99,15 +119,34 @@ def main(argv=None):
     else:
         alphabet = os.environ.get('PURPLE97_ALPHABET', DEFAULT_ALPHABET)
 
+    # Create purple cipher machine object
     try:
         purple = Purple97.from_key_sheet(switches, alphabet)
     except (Purple97Error, SteppingSwitchError) as ex:
         parser.error(str(ex))
 
+
+    if args.file:
+        try:
+            fp = sys.stdin if args.file == '-' else open(args.file, 'r')
+        except IOError as ex:
+            raise SystemExit(str(ex))
+
     if args.encrypt:
-        result = purple.encrypt(filter_plaintext(args.text))
+        action = purple.encrypt
+
+        source = [args.text] if args.text else fp
+        source = (filter_plaintext(source) if args.filter else
+                                    filter_whitespace(source))
     else:
-        result = purple.decrypt(args.text)
+        action = purple.decrypt
+        source = [args.text] if args.text else fp
+        source = filter_whitespace(source)
+
+    try:
+        result = action(source)
+    except (Purple97Error, SteppingSwitchError) as ex:
+        parser.error(str(ex))
 
     print(result)
 
