@@ -128,8 +128,6 @@ class Purple97:
         self.alphabet = alphabet
         self.plugboard = {c : n for n, c in enumerate(alphabet)}
 
-        self.middle_switch_catchup = False
-
     @classmethod
     def from_key_sheet(cls, switches, alphabet=None):
         """This class method allows one to construct a Purple97 using
@@ -184,11 +182,16 @@ class Purple97:
 
         """
         plaintext = []
-        for c in ciphertext:
+        for i, c in enumerate(ciphertext):
             if c not in self.VALID_KEYS:
                 raise Purple97Error("invalid input '{}' to decrypt".format(c))
 
             n = self.plugboard[c]
+
+            if i == 490 or i == 491:
+                print(self.sixes.pos, self.fast_switch.pos,
+                        self.middle_switch.pos, self.slow_switch.pos)
+
             if n < 6:
                 # This input goes to the sixes switch
                 x = self.sixes.decrypt(n)
@@ -203,6 +206,10 @@ class Purple97:
 
             # Now step the switches.
             self.step()
+
+            if i == 490 or i == 491:
+                print(self.sixes.pos, self.fast_switch.pos,
+                        self.middle_switch.pos, self.slow_switch.pos)
 
         return ''.join(plaintext)
 
@@ -257,34 +264,13 @@ class Purple97:
         # However if the sixes is at the last position (24), the middle
         # switch steps instead.
         #
-        # But if the sixes is at the last position (24) and the middle
-        # switch is at the last position (24), the slow switch will step.
-        # The middle switch will step on the next letter in this case.
-        #
-        # Here we reproduce figure 10 from the reference paper with offsets
-        # adjusted for 0-based indexing to illustrate the movement. In this
-        # example the fast is twenties #1, middle is #2, and slow is #3.
-        #
-        # Sixes     Twenties #1     Twenties #2     Twenties #3
-        # -----------------------------------------------------
-        #   20          0               24              4
-        #   21          1               24              4
-        #   22          2               24              4
-        #   23          3               24              4
-        # * 24          3               24              5
-        # #  0          3                0              5
-        #    1          4                0              5
-        #
-        # Here we see the fast switch stepping. However at (*) both the
-        # sixes and middle switch have reached their last positions, so the
-        # slow switch steps. At the next letter (#) the middle switch plays
-        # "catch up" and advances while the fast switch holds steady.
+        # But if the sixes is at the second to last position (23) and the middle
+        # switch is at the last position (24), the slow switch will step.  The
+        # middle switch will step on the next letter in this case.
 
-        if sixes_pos == 24 and middle_pos == 24:
+        if sixes_pos == 23 and middle_pos == 24:
             self.slow_switch.step()
-            self.middle_switch_catchup = True
-        elif sixes_pos == 24 or self.middle_switch_catchup:
+        elif sixes_pos == 24:
             self.middle_switch.step()
-            self.middle_switch_catchup = False
         else:
             self.fast_switch.step()
