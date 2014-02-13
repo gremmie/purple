@@ -93,6 +93,12 @@ OOSZ-----ZRTGWFBLKI--------YBDABJ-----WYOEANV---OM
 ONCL-----HETRIPAITI--------THGERM-----DYTALYC---OV
 """
 
+# For debugging with other simulators. Just import this module and print these
+# out or whatever...:
+_lines = part1.split()
+PT1_CT = ''.join(_lines[0::2])
+PT1_PT = ''.join(_lines[1::2])
+
 
 class Purple97TestCase(unittest.TestCase):
 
@@ -179,12 +185,8 @@ class Purple97TestCase(unittest.TestCase):
 
     def test_decrypt_part_1_message(self):
 
-        lines = part1.split()
-        ciphertext = ''.join(lines[0::2])
-        plaintext = ''.join(lines[1::2])
-
-        # Use 'X' in place of the garbles
-        input_text = ciphertext.replace('-', 'X')
+        ciphertext = PT1_CT
+        plaintext = PT1_PT
 
         self.assertEqual(len(ciphertext), len(plaintext))
 
@@ -193,13 +195,12 @@ class Purple97TestCase(unittest.TestCase):
                 switches='9-1,24,6-23',
                 alphabet='NOKTYUXEQLHBRMPDICJASVWGZF')
 
-        actual = purple.decrypt(input_text)
+        actual = purple.decrypt(ciphertext)
 
         mismatches = []
         for n, (a, b) in enumerate(zip(plaintext, actual)):
-            if a != b and a != '-':
-                import pdb; pdb.set_trace()
-                mismatches.append(n)
+            if a != b:
+                mismatches.append((n, a, b, plaintext[n:n+10], actual[n:n+10]))
 
         msg = None
         if mismatches:
@@ -210,9 +211,8 @@ class Purple97TestCase(unittest.TestCase):
 
     def test_encrypt_part_1_message(self):
 
-        lines = part1.split()
-        ciphertext = ''.join(lines[0::2])
-        plaintext = ''.join(lines[1::2])
+        ciphertext = PT1_CT
+        plaintext = PT1_PT
 
         # Use 'X' in place of the garbles
         input_text = plaintext.replace('-', 'X')
@@ -229,7 +229,7 @@ class Purple97TestCase(unittest.TestCase):
         mismatches = []
         for n, (a, b) in enumerate(zip(ciphertext, actual)):
             if a != b and a != '-':
-                mismatches.append(n)
+                mismatches.append((n, a, b))
 
         msg = None
         if mismatches:
