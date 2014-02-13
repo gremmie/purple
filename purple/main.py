@@ -103,7 +103,7 @@ def main(argv=None):
         parser.exit(1)
     if args.encrypt and args.decrypt:
         parser.error("Please supply either -e or -d, not both")
-    if args.text and args.file:
+    if args.text and args.input:
         parser.error("Please supply either -t or -i, not both")
     if args.decrypt and args.filter:
         parser.error("The -f option only works with -e (encrypt)")
@@ -126,9 +126,9 @@ def main(argv=None):
         parser.error(str(ex))
 
 
-    if args.file:
+    if args.input:
         try:
-            fp = sys.stdin if args.file == '-' else open(args.file, 'r')
+            fp = sys.stdin if args.input == '-' else open(args.input, 'r')
         except IOError as ex:
             raise SystemExit(str(ex))
 

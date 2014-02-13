@@ -30,6 +30,7 @@ class Purple97:
 
     """
     VALID_KEYS = set(string.ascii_uppercase)
+    VALID_DECRYPT_KEYS = set(string.ascii_uppercase + '-')
     STRAIGHT_PLUGBOARD = 'AEIOUYBCDFGHJKLMNPQRSTVWXZ'
 
     def __init__(self, switches_pos=None, fast_switch=1, middle_switch=2,
@@ -177,20 +178,24 @@ class Purple97:
         """Decrypts the given ciphertext message and returns the plaintext
         output.
 
-        ciphertext must contain only the letters A-Z or else a Purple97Error
-        exception is raised.
+        ciphertext must contain only the letters A-Z or '-' or else a
+        Purple97Error exception is raised. A '-' is used to indicate a garble.
+        When a '-' is encountered, a '-' is added to the plaintext output and
+        the machine is stepped.
 
         """
         plaintext = []
         for i, c in enumerate(ciphertext):
-            if c not in self.VALID_KEYS:
+            if c not in self.VALID_DECRYPT_KEYS:
                 raise Purple97Error("invalid input '{}' to decrypt".format(c))
 
-            n = self.plugboard[c]
+            # Process a garble:
+            if c == '-':
+                plaintext.append('-')
+                self.step()
+                continue
 
-            if i == 490 or i == 491:
-                print(self.sixes.pos, self.fast_switch.pos,
-                        self.middle_switch.pos, self.slow_switch.pos)
+            n = self.plugboard[c]
 
             if n < 6:
                 # This input goes to the sixes switch
@@ -206,10 +211,6 @@ class Purple97:
 
             # Now step the switches.
             self.step()
-
-            if i == 490 or i == 491:
-                print(self.sixes.pos, self.fast_switch.pos,
-                        self.middle_switch.pos, self.slow_switch.pos)
 
         return ''.join(plaintext)
 
