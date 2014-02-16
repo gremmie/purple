@@ -1,4 +1,4 @@
-# Copyright (C) 2013 by Brian Neal.
+# Copyright (C) 2013 - 2014 by Brian Neal.
 # This file is part of purple, the PURPLE (Cipher Machine 97) simulation.
 # purple is released under the MIT License (see LICENSE.txt).
 
@@ -30,7 +30,6 @@ class Purple97:
 
     """
     VALID_KEYS = set(string.ascii_uppercase)
-    VALID_DECRYPT_KEYS = set(string.ascii_uppercase + '-')
     STRAIGHT_PLUGBOARD = 'AEIOUYBCDFGHJKLMNPQRSTVWXZ'
 
     def __init__(self, switches_pos=None, fast_switch=1, middle_switch=2,
@@ -186,14 +185,15 @@ class Purple97:
         """
         plaintext = []
         for i, c in enumerate(ciphertext):
-            if c not in self.VALID_DECRYPT_KEYS:
-                raise Purple97Error("invalid input '{}' to decrypt".format(c))
 
             # Process a garble:
             if c == '-':
                 plaintext.append('-')
                 self.step()
                 continue
+
+            if c not in self.VALID_KEYS:
+                raise Purple97Error("invalid input '{}' to decrypt".format(c))
 
             n = self.plugboard[c]
 
