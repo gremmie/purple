@@ -1,4 +1,4 @@
-# Copyright (C) 2013 by Brian Neal.
+# Copyright (C) 2013 - 2014 by Brian Neal.
 # This file is part of purple, the PURPLE (Cipher Machine 97) simulation.
 # purple is released under the MIT License (see LICENSE.txt).
 
