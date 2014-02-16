@@ -45,7 +45,7 @@ IRETINCPSQJAWVHUFKRMAMXNZUIFNOPUEMHGLOEJHZOOKHHEED
 EDSTATESREGARDINGTHEADJUSTMENTANDADVANCEMENTOFJAPA
 
 NIHXFXFXGPDZBSKAZABYEKYEPNIYSHVKFRFPVCJTPTOYCNEIQB
-NESEVVDAMERICANRELATIONSANDTHESTABILIZATIONOFTHEPA
+NESEVVFAMERICANRELATIONSANDTHESTABILIZATIONOFTHEPA
 
 FEXMERMIZLGDRXZORLZFSQYPZFATZCHUGRNHWDDTAIHYOOCOOD
 CIFICAREACFCCCFTHEJAPANESEQOVERNMENXHASTHEHONORTOS
@@ -93,11 +93,9 @@ OOSZ-----ZRTGWFBLKI--------YBDABJ-----WYOEANV---OM
 ONCL-----HETRIPAITI--------THGERM-----DYTALYC---OV
 """
 
-# For debugging with other simulators. Just import this module and print these
-# out or whatever...:
-_lines = part1.split()
-PT1_CT = ''.join(_lines[0::2])
-PT1_PT = ''.join(_lines[1::2])
+pt1_lines = part1.split()
+PT1_CT = ''.join(pt1_lines[0::2])
+PT1_PT = ''.join(pt1_lines[1::2])
 
 
 class Purple97TestCase(unittest.TestCase):
@@ -200,7 +198,7 @@ class Purple97TestCase(unittest.TestCase):
         mismatches = []
         for n, (a, b) in enumerate(zip(plaintext, actual)):
             if a != b:
-                mismatches.append((n, a, b, plaintext[n:n+10], actual[n:n+10]))
+                mismatches.append((n, a, b))
 
         msg = None
         if mismatches:
