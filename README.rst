@@ -262,7 +262,8 @@ Support
 #######
 
 To report a bug or suggest a feature, please use the issue tracker at the
-`Purple Bitbucket page`_.
+`Purple Bitbucket page`_. You can also email the author using the address at
+the top of this file.
 
 
 References
