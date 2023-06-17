@@ -16,7 +16,7 @@ setup(
     url='https://bitbucket.org/bgneal/purple/',
     license='MIT',
     description='Simulation of the WW2 Japanese PURPLE cipher machine.',
-    long_description=open(join(dirname(__file__), 'README.txt')).read(),
+    long_description=open(join(dirname(__file__), 'README.rst'), encoding='utf-8').read(),
     packages=['purple', 'purple.tests'],
     scripts=['scripts/purple'],
     classifiers = [
