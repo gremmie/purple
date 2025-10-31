@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2014 by Brian Neal.
+# Copyright (C) 2014 - 2025 by Brian Neal.
 # This file is part of purple, the PURPLE (Cipher Machine 97) simulation.
 # purple is released under the MIT License (see LICENSE.txt).
 
@@ -13,14 +13,14 @@ setup(
     version=purple.__version__,
     author='Brian Neal',
     author_email='bgneal@gmail.com',
-    url='https://bitbucket.org/bgneal/purple/',
+    url='https://github.com/gremmie/purple'
     license='MIT',
     description='Simulation of the WW2 Japanese PURPLE cipher machine.',
     long_description=open(join(dirname(__file__), 'README.rst'), encoding='utf-8').read(),
     packages=['purple', 'purple.tests'],
     scripts=['scripts/purple'],
     classifiers = [
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: End Users/Desktop',
         'Intended Audience :: Developers',

@@ -6,12 +6,12 @@ A historically accurate PURPLE simulator written in Python 3
 ------------------------------------------------------------
 
 :Author: Brian Neal <bgneal@gmail.com>
-:Version: 0.1
-:Date: February 17, 2013
-:Home Page: https://bitbucket.org/bgneal/purple/
+:Version: 0.1.1
+:Date: October 31, 2025
+:Home Page: https://github.com/gremmie/purple
 :License: MIT License (see LICENSE.txt)
 :Documentation: This file
-:Support: https://bitbucket.org/bgneal/purple/issues
+:Support: https://github.com/gremmie/purple/issues
 
 ``Purple`` is a Python library and command-line utility for simulating the
 `PURPLE Machine`_, a cipher machine used by the Japanese Foreign Office before
@@ -50,17 +50,9 @@ You can install it using pip_::
    $ pip install purple                # install
    $ pip install --upgrade purple      # upgrade
 
-You can also visit the the `Purple Bitbucket page`_ and download an archive
-file of the latest code. Alternatively, if you use Mercurial_, you can clone
-the repository with the following command::
-
-   $ hg clone https://bitbucket.org/bgneal/purple
-
-If you did not use pip_ (you downloaded or cloned the code yourself), you can
-install with::
-
-   $ cd where-you-extracted-purple
-   $ python setup.py install
+Please note at the time of this update that the version on PyPI is a bit old
+and is in the process of being updated. The lastest version of ``Purple`` can be
+found at the `Purple GitHub page`_.
 
 To run the unit tests::
 
@@ -262,7 +254,7 @@ Support
 #######
 
 To report a bug or suggest a feature, please use the issue tracker at the
-`Purple Bitbucket page`_. You can also email the author using the address at
+`Purple GitHub page`_. You can also email the author using the address at
 the top of this file.
 
 
@@ -290,8 +282,6 @@ reference 2.
 .. _PURPLE Machine: http://en.wikipedia.org/wiki/Purple_(cipher_machine)
 .. _Python: http://www.python.org
 .. _Python Package Index: http://pypi.python.org/pypi/purple/
-.. _virtualenv: http://www.virtualenv.org/
 .. _pip: http://www.pip-installer.org
-.. _Purple Bitbucket page: https://bitbucket.org/bgneal/purple/
-.. _Mercurial: http://mercurial.selenic.com/
+.. _Purple GitHub page: https://github.com/gremmie/purple
 .. _The PURPLE Machine: http://cryptocellar.web.cern.ch/cryptocellar/simula/purple/
