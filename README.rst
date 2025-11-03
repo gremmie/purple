@@ -6,8 +6,8 @@ A historically accurate PURPLE simulator written in Python 3
 ------------------------------------------------------------
 
 :Author: Brian Neal <bgneal@gmail.com>
-:Version: 0.1.1
-:Date: October 31, 2025
+:Version: 1.0.0
+:Date: Noveber 2, 2025
 :Home Page: https://github.com/gremmie/purple
 :License: MIT License (see LICENSE.txt)
 :Documentation: This file
@@ -39,25 +39,19 @@ dependencies.
 Installation
 ############
 
-``Purple`` is available on the `Python Package Index`_ (PyPI). There are
-a number of ways to install to ``Purple``, detailed below. The author
-recommends you install into a virtualenv_. Setting up a virtualenv is not hard,
-but describing it is out of scope for this document. Please see the virtualenv_
-documentation for more information.
+``Purple`` is available on the `Python Package Index`_ (PyPI).::
 
-You can install it using pip_::
+   $ python3 -m pip install purple
 
-   $ pip install purple                # install
-   $ pip install --upgrade purple      # upgrade
+If you aren't familiar with installing Python packages, please see, for
+example, the `Python Packaging Installing Packages tutorial`_.
 
-Please note at the time of this update that the version on PyPI is a bit old
-and is in the process of being updated. The lastest version of ``Purple`` can be
-found at the `Purple GitHub page`_.
+The latest version of ``Purple`` can always be found at the `Purple GitHub page`_.
 
 To run the unit tests::
 
    $ cd where-you-extracted-purple
-   $ python -m unittest discover
+   $ python3 -m unittest discover
 
 
 Initial Settings Syntax
@@ -282,6 +276,7 @@ reference 2.
 .. _PURPLE Machine: http://en.wikipedia.org/wiki/Purple_(cipher_machine)
 .. _Python: http://www.python.org
 .. _Python Package Index: http://pypi.python.org/pypi/purple/
-.. _pip: http://www.pip-installer.org
+.. _Python Package Index: http://pypi.python.org/pypi/purple/
+.. _Python Packaging Installing Packages tutorial: https://packaging.python.org/en/latest/tutorials/installing-packages/
 .. _Purple GitHub page: https://github.com/gremmie/purple
 .. _The PURPLE Machine: http://cryptocellar.web.cern.ch/cryptocellar/simula/purple/
