@@ -1,6 +1,0 @@
-syntax: glob
-*.pyc
-*.swp
-docs/_build
-dist
-MANIFEST
