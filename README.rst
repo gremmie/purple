@@ -5,13 +5,13 @@ Purple
 A historically accurate PURPLE simulator written in Python 3
 ------------------------------------------------------------
 
-:Author: Brian Neal <bgneal@gmail.com>
-:Version: 1.0.0
-:Date: Noveber 2, 2025
-:Home Page: https://github.com/gremmie/purple
-:License: MIT License (see LICENSE.txt)
-:Documentation: This file
-:Support: https://github.com/gremmie/purple/issues
+- **Author:** Brian Neal <bgneal@gmail.com>
+- **Version:** 1.0.0
+- **Date:** November 2, 2025
+- **Home Page:** https://github.com/gremmie/purple
+- **License:** MIT License (see LICENSE.txt)
+- **Documentation:** This file
+- **Support:** https://github.com/gremmie/purple/issues
 
 ``Purple`` is a Python library and command-line utility for simulating the
 `PURPLE Machine`_, a cipher machine used by the Japanese Foreign Office before
@@ -142,8 +142,8 @@ the Initial Settings Syntax section.
 If you are going to be working with the same initial switch settings and
 plugboard alphabet over many command invocations it may be more convenient to
 specify them as environment variables instead of repeatedly using the
-command-line arguments. The examples below assume these statements have been
-executed::
+command-line arguments. **The examples below assume these statements have been
+executed**::
 
    $ export PURPLE97_SWITCHES=9-1,24,6-23
    $ export PURPLE97_ALPHABET=NOKTYUXEQLHBRMPDICJASVWGZF

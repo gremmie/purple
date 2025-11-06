@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "purple"
+version = "1.0.0"
+authors = [
+  { name="Brian Neal", email="bgneal@gmail.com" },
+]
+description = 'Simulation of the WW2 Japanese PURPLE cipher machine.'
+readme = "README.rst"
+requires-python = ">=3.2.2"
+classifiers = [
+   "Development Status :: 5 - Production/Stable",
+   "Environment :: Console",
+   "Intended Audience :: End Users/Desktop",
+   "Intended Audience :: Developers",
+   "Intended Audience :: Information Technology",
+   "Intended Audience :: Science/Research",
+   "Intended Audience :: Other Audience",
+   "Intended Audience :: Education",
+   "Operating System :: OS Independent",
+   "Natural Language :: English",
+   "Programming Language :: Python",
+   "Programming Language :: Python :: 3",
+   "Topic :: Communications",
+   "Topic :: Security",
+   "Topic :: Security :: Cryptography",
+   "Topic :: Software Development :: Libraries",
+   "Topic :: Software Development :: Libraries :: Python Modules",
+   "Topic :: Utilities",
+]
+keywords = [
+   "crypto",
+   "cryptography",
+   "simulator",
+   "purple",
+   "enigma",
+   "ww2",
+   "world war 2",
+]
+license = "MIT"
+license-files = ["LICENSE.txt"]
+
+[project.urls]
+Homepage = "https://github.com/gremmie/purple"
+Issues = "https://github.com/gremmie/purple/issues"
+Changelog = "https://github.com/gremmie/purple/blob/master/CHANGELOG.md"
+
+[project.scripts]
+purple = "purple.main:main"
