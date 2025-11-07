@@ -276,7 +276,6 @@ reference 2.
 .. _PURPLE Machine: http://en.wikipedia.org/wiki/Purple_(cipher_machine)
 .. _Python: http://www.python.org
 .. _Python Package Index: http://pypi.python.org/pypi/purple/
-.. _Python Package Index: http://pypi.python.org/pypi/purple/
 .. _Python Packaging Installing Packages tutorial: https://packaging.python.org/en/latest/tutorials/installing-packages/
 .. _Purple GitHub page: https://github.com/gremmie/purple
 .. _The PURPLE Machine: http://cryptocellar.web.cern.ch/cryptocellar/simula/purple/
