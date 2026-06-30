@@ -10,3 +10,7 @@ Original version, initially hosted on Bitbucket. Later moved to Github.
 - Small documentation updates.
 - Switched to modern packaging system. This should improve the experience for
   Windows users.
+
+## Version 1.0.1 - June 29, 2026
+
+- Update links to CryptoCellar.org
