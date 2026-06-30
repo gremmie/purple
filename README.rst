@@ -6,8 +6,8 @@ A historically accurate PURPLE simulator written in Python 3
 ------------------------------------------------------------
 
 - **Author:** Brian Neal <bgneal@gmail.com>
-- **Version:** 1.0.0
-- **Date:** November 2, 2025
+- **Version:** 1.0.1
+- **Date:** June 29, 2026
 - **Home Page:** https://github.com/gremmie/purple
 - **License:** MIT License (see LICENSE.txt)
 - **Documentation:** This file
@@ -262,7 +262,7 @@ References
 #. Wikipedia Article: `PURPLE Machine`_
 
 The paper in reference 1 is also available here:
-http://cryptocellar.web.cern.ch/cryptocellar/pubs/PurpleRevealed.pdf
+https://cryptocellar.org/pubs/purple-revealed.pdf
 
 This simulator would not have been possible without Frode Weierud's
 CryptoCellar page and the detailed explanations and analysis found in reference
@@ -278,4 +278,4 @@ reference 2.
 .. _Python Package Index: http://pypi.python.org/pypi/purple/
 .. _Python Packaging Installing Packages tutorial: https://packaging.python.org/en/latest/tutorials/installing-packages/
 .. _Purple GitHub page: https://github.com/gremmie/purple
-.. _The PURPLE Machine: http://cryptocellar.web.cern.ch/cryptocellar/simula/purple/
+.. _The PURPLE Machine: https://cryptocellar.org/simula/purple/index.html

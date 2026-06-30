@@ -1,4 +1,4 @@
-# Copyright (C) 2013 - 2014 by Brian Neal.
+# Copyright (C) 2013 - 2026 by Brian Neal.
 # This file is part of purple, the PURPLE (Cipher Machine 97) simulation.
 # purple is released under the MIT License (see LICENSE.txt).
 
@@ -11,7 +11,7 @@ Sullivan, and Frode Weierud. This paper was published in Cryptologia, Volume 27,
 Issue 1, January, 2003, pp. 1-43.
 
 The paper is also available at:
-http://cryptocellar.web.cern.ch/cryptocellar/pubs/PurpleRevealed.pdf
+https://cryptocellar.org/simula/purple/index.html
 
 """
 from collections import Counter
